@@ -52,5 +52,7 @@ public class App {
         cp.setCliente(j); 
         System.out.println("O rendimento da conta Poupança foi: " + cp.rendimento());
 
+        System.out.println("Testando o git");
+
     }
 }
