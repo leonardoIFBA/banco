@@ -55,4 +55,61 @@ public class App {
         System.out.println("Testando o git");
 
     }
+
+    public static Connection getConexao() {
+    Connection conexao = null;
+
+    try {
+      // Carregando o JDBC Driver padrão
+      Class.forName("com.mysql.jdbc.Driver");
+
+      // Configurando a nossa conexão com um banco de dados//
+      String url = "jdbc:mysql://200.128.9.179:3306/bancoifba"; // caminho e nome do BD 200.128.9.179
+      String username = "remoto"; // nome de um usuário de seu BD
+      String password = "remoto"; // sua senha de acesso
+
+      conexao = DriverManager.getConnection(url, username, password);
+
+      return conexao;
+
+    } catch (ClassNotFoundException e) { // Driver não encontrado
+      System.out.println("O driver expecificado nao foi encontrado.");
+      return null;
+    } catch (SQLException e) {
+      // Não conseguindo se conectar ao banco
+      System.out.println("Nao foi possivel conectar ao Banco de Dados.");
+      return null;
+    }
+
+  }
+
+    public static List<Conta> listaTodos() throws SQLException {
+
+    Connection conn = getConexao();
+    List<Conta> contas = new ArrayList<>();
+    try {
+      String sql = "SELECT * FROM conta";
+
+      Statement stmt = conn.createStatement();
+
+      // guarda no objeto o resultado da consulta
+      ResultSet rs = stmt.executeQuery(sql);
+
+      
+      while (rs.next()) {
+        Conta c = new Conta();
+        c.setNumero(rs.getString("numero"));
+        //c.setCliente(rs.getString("cliente"));
+        c.setSaldo(rs.getDouble("saldo"));
+
+        contas.add(c);
+      }
+
+    } catch (SQLException ex) {
+      System.out.println("Não conseguiu listar as contas do BD.");
+    } finally {
+      conn.close();      
+    }
+    return contas;
+  }
 }
